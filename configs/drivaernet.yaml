@@ -1,0 +1,26 @@
+# Replicates the paper's DrivAerNet result; procedure in the README.
+# Expected: test mse 0.0400, relative L2 14.46% per car, 20.0% pooled over all nodes on standardized pressure (seed 42, full mesh in training and evaluation). 4.71M parameters.
+dataset: drivaernet
+seeds:
+- 42
+embedding:
+  embed_dim: 256
+  deg: 64
+model:
+  hidden_dim: 256
+  num_layers: 3
+  num_heads: 4
+  mlp_ratio: 2
+  dropout: 0.0
+  branch_dim: 64
+  spectral_threshold: 1.5
+train:
+  lr: 2.5e-05
+  weight_decay: 1.0e-05
+  epochs: 100
+  batch_size: 1
+  warmup_epochs: 2
+  eval_freq: 2
+  patience: 20
+  selection_metric: mse
+  num_workers: 8

@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GIST: Gauge-Invariant Spectral Transformers</title>
+<meta name="description" content="GIST, a graph transformer with end-to-end linear cost whose attention is invariant to the choice of spectral basis. NeurIPS 2026.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="GIST: Gauge-Invariant Spectral Transformers for Scalable Graph Neural Operators">
+<meta property="og:description" content="A graph transformer with end-to-end linear cost whose attention is invariant to the choice of spectral basis. NeurIPS 2026.">
+<meta property="og:url" content="https://ibm.github.io/gist-neurips-2026/">
+<meta property="og:image" content="https://ibm.github.io/gist-neurips-2026/architecture.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="653">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root {
+  --bg: #ffffff;
+  --text: #1d1f23;
+  --muted: #5b6270;
+  --accent: #0f62fe;
+  --border: #dde1e6;
+  --code-bg: #f4f5f7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15171a;
+    --text: #e6e8eb;
+    --muted: #a2a9b4;
+    --accent: #78a9ff;
+    --border: #33373d;
+    --code-bg: #202328;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+main { max-width: 860px; margin: 0 auto; padding: 48px 16px 64px; }
+header { text-align: center; margin-bottom: 40px; }
+h1 { font-size: 2rem; line-height: 1.25; margin: 0 0 16px; }
+h2 { font-size: 1.3rem; margin: 40px 0 12px; }
+.authors { font-size: 1.1rem; margin: 0; }
+.affiliation, .venue, figcaption { color: var(--muted); }
+.affiliation, .venue { margin: 4px 0; }
+.table-wrap { overflow-x: auto; margin: 16px 0 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: right; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th { border-bottom-width: 2px; }
+.std { color: var(--muted); font-size: 0.8em; }
+.note { color: var(--muted); font-size: 0.9rem; }
+.links { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 24px; }
+.links a {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 18px;
+  color: var(--text);
+  text-decoration: none;
+}
+.links a:hover { border-color: var(--accent); color: var(--accent); }
+a { color: var(--accent); }
+figure { margin: 24px 0; }
+figure img { display: block; width: 100%; height: auto; background: #ffffff; border-radius: 8px; padding: 12px; }
+figcaption { font-size: 0.9rem; margin-top: 8px; }
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.copyable { position: relative; }
+.copyable pre { padding-top: 44px; }
+.copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 10px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.copy:hover { border-color: var(--accent); color: var(--accent); }
+.viewer { --viewer-stacked: 0; position: relative; aspect-ratio: 3 / 1; background: #ffffff; border-radius: 8px; overflow: hidden; touch-action: none; }
+.viewer canvas { display: block; width: 100%; height: 100%; }
+.viewer-label { position: absolute; top: 8px; font-size: 0.85rem; color: #1d1f23; pointer-events: none; }
+.viewer-status { position: absolute; inset: 0; display: grid; place-items: center; color: #5b6270; font-size: 0.9rem; }
+.colorbars { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 8px; }
+.colorbar { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--muted); }
+.colorbar-pressure { flex: 2 1 240px; }
+.colorbar-error { flex: 1 1 240px; }
+.colorbar-ramp { flex: 1; height: 10px; border-radius: 5px; }
+@media (max-width: 560px) { .viewer { --viewer-stacked: 1; aspect-ratio: 1 / 1.8; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>GIST: Gauge-Invariant Spectral Transformers for Scalable Graph Neural Operators</h1>
+  <p class="authors">Mattia Rigotti, Nicholas Thumiger, Thomas Frick</p>
+  <p class="affiliation">IBM Research</p>
+  <p class="venue">NeurIPS 2026</p>
+  <nav class="links">
+    <a href="https://neurips.cc/virtual/2026/poster/152787">Paper</a>
+    <a href="https://arxiv.org/abs/2603.16849">arXiv</a>
+    <a href="https://github.com/IBM/gist-neurips-2026">Code</a>
+  </nav>
+</header>
+
+<section>
+  <h2>Abstract</h2>
+  <p>Neural operators on irregular meshes face a fundamental tension. Spectral positional encodings, a natural choice in graph learning for capturing geometry, require cubic-complexity eigendecomposition and inadvertently break gauge invariance through numerical solver artifacts; existing efficient approximations typically sacrifice gauge symmetry by design. Both failure modes break discretization invariance: models fail to transfer across mesh resolutions of the same domain, and similarly across different graphs of related structure in inductive settings. We propose GIST (Gauge-Invariant Spectral Transformer), a scalable neural operator that resolves this tension by restricting attention to pairwise inner products of efficient approximate spectral embeddings. We prove these inner products estimate an exactly gauge-invariant graph kernel at end-to-end <i>O</i>(<i>N</i>) complexity, and establish a formal connection between gauge invariance and discretization-invariant learning with bounded mismatch error. To our knowledge, GIST is the first scalable graph neural operator with a provable discretization-mismatch bound. Empirically, GIST sets state-of-the-art on the AirfRANS, ShapeNet-Car, DrivAerNet, and DrivAerNet++ mesh benchmarks (up to 750K nodes), and additionally matches strong baselines on standard graph benchmarks (e.g., 99.53% micro-F1 on PPI).</p>
+</section>
+
+<section>
+  <h2>Results</h2>
+  <figure>
+    <div class="viewer" id="viewer">
+      <span class="viewer-label">CFD (ground truth)</span>
+      <span class="viewer-label">GIST prediction</span>
+      <span class="viewer-label">Error (GIST − CFD)</span>
+      <div class="viewer-status" id="viewer-status">Loading the 3D car…</div>
+    </div>
+    <div class="colorbars">
+      <div class="colorbar colorbar-pressure" id="colorbar-pressure">Pressure <span class="low"></span><div class="colorbar-ramp"></div><span class="high"></span></div>
+      <div class="colorbar colorbar-error" id="colorbar-error">Error <span class="low"></span><div class="colorbar-ramp"></div><span class="high"></span></div>
+    </div>
+    <figcaption id="viewer-caption">Surface pressure on a DrivAerNet test car. Drag to rotate, scroll or pinch to zoom; the three views move together.</figcaption>
+  </figure>
+  <p>Surface-pressure prediction on unseen geometries, lower is better. GIST: mean ± standard deviation over 3 seeds on AirfRANS and ShapeNet-Car.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Model</th><th>AirfRANS (MSE)</th><th>ShapeNet-Car (rel. ℓ<sub>2</sub>)</th></tr></thead>
+    <tbody>
+      <tr><td>Transolver</td><td>0.0142</td><td>7.45%</td></tr>
+      <tr><td><b>GIST</b></td><td><b>0.0017</b> <span class="std">± 0.0002</span></td><td><b>7.02%</b> <span class="std">± 0.05</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Model</th><th>DrivAerNet (MSE)</th><th>DrivAerNet (rel. ℓ<sub>2</sub>)</th><th>DrivAerNet++ (MSE)</th><th>DrivAerNet++ (rel. ℓ<sub>2</sub>)</th></tr></thead>
+    <tbody>
+      <tr><td>RegDGCNN</td><td>0.0901</td><td>28.49%</td><td>0.0829</td><td>27.72%</td></tr>
+      <tr><td>Transolver</td><td>0.0537</td><td>22.52%</td><td>0.0715</td><td>23.87%</td></tr>
+      <tr><td>FigConvNet</td><td>0.0438</td><td>20.98%</td><td>0.0499</td><td>20.86%</td></tr>
+      <tr><td>TripNet</td><td>0.0423</td><td>20.35%</td><td>0.0455</td><td>20.05%</td></tr>
+      <tr><td><b>GIST</b></td><td><b>0.0400</b></td><td><b>20.03%</b></td><td><b>0.0363</b></td><td><b>18.60%</b></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Node classification (accuracy, micro-F1 on PPI; higher is better), against the best of the baselines in the paper for each benchmark. GIST: mean ± standard deviation over 6 seeds.</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Model</th><th>Cora</th><th>CiteSeer</th><th>PubMed</th><th>Photo</th><th>ogbn-arxiv</th><th>PPI</th></tr></thead>
+    <tbody>
+      <tr><td>Best baseline</td><td><b>85.50</b></td><td>73.40</td><td>81.12</td><td>95.48</td><td><b>72.63</b></td><td><b>99.53</b></td></tr>
+      <tr><td class="note">(method)</td><td class="note">GCNII</td><td class="note">GCNII</td><td class="note">GCN</td><td class="note">SpecFormer</td><td class="note">SGFormer</td><td class="note">GCNII</td></tr>
+      <tr><td><b>GIST</b></td><td>84.25 <span class="std">± 0.65</span></td><td><b>73.85</b> <span class="std">± 0.63</span></td><td><b>82.60</b> <span class="std">± 0.37</span></td><td><b>95.65</b> <span class="std">± 0.46</span></td><td>72.31 <span class="std">± 0.29</span></td><td><b>99.53</b> <span class="std">± 0.01</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">Bold marks the best mean. Baseline numbers, their sources and all other baselines are in the paper.</p>
+</section>
+
+<section>
+  <h2>Architecture</h2>
+  <figure>
+    <img src="architecture.svg" alt="Diagram of Gauge-Invariant Spectral Self-Attention and of the GIST block with its feature, local and global branches">
+    <figcaption>Left: Gauge-Invariant Spectral Self-Attention uses the spectral embeddings as queries and keys and the node features as values, so the embeddings set the attention weights and never enter the values. In the code, the softmax drawn here is linear attention with a ReLU kernel: each head subtracts a learned threshold from the embeddings, applies a ReLU and normalizes the weights by their sum. Right: every GIST block runs three branches in parallel (feature, local and global); only blocks followed by another use Gauge-Equivariant Spectral Self-Attention to refine the embeddings for the next block.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Scalability</h2>
+  <figure>
+    <img src="scalability.svg" alt="GPU memory and forward plus backward time of GIST as a function of the number of nodes, for several hidden dimensions">
+    <figcaption>GPU memory (left) and forward plus backward time (right) of a 3-layer GIST as a function of the number of nodes, for hidden dimensions 64, 128 and 256, on DrivAerNet meshes subsampled by random node dropout.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Code</h2>
+  <p>The <a href="https://github.com/IBM/gist-neurips-2026">repository</a> holds the model and one config per benchmark, with the commands, data and compute needed to reproduce each result.</p>
+<pre><code>git clone https://github.com/IBM/gist-neurips-2026.git
+cd gist-neurips-2026
+pip install -e .
+python scripts/generate_embeddings.py cora --embed_dim 512 --deg 128
+python -m gist.train configs/cora.yaml</code></pre>
+</section>
+
+<section>
+  <h2>Citation</h2>
+<div class="copyable">
+<button class="copy" type="button">Copy</button>
+<pre><code>@inproceedings{rigotti2026gist,
+  title     = {{GIST}: Gauge-Invariant Spectral Transformers for Scalable Graph Neural Operators},
+  author    = {Rigotti, Mattia and Thumiger, Nicholas and Frick, Thomas},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {39},
+  year      = {2026}
+}</code></pre>
+</div>
+</section>
+</main>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+// Imported dynamically below, so that a CDN failure reaches the viewer's error message.
+let THREE, OrbitControls;
+
+// Matplotlib's coolwarm and ColorBrewer's PuOr (with coolwarm's grey centre), sampled at five points.
+const COOLWARM = [[0.230, 0.299, 0.754], [0.552, 0.690, 0.996], [0.865, 0.865, 0.865], [0.958, 0.604, 0.482], [0.706, 0.016, 0.150]];
+const PUOR = [[0.702, 0.345, 0.024], [0.992, 0.722, 0.388], [0.865, 0.865, 0.865], [0.698, 0.671, 0.824], [0.329, 0.153, 0.533]];
+
+function colormap(stops, t) {
+  const x = THREE.MathUtils.clamp(t, 0, 1) * (stops.length - 1);
+  const i = Math.min(Math.floor(x), stops.length - 2);
+  const f = x - i;
+  return stops[i].map((value, c) => value + f * (stops[i + 1][c] - value));
+}
+
+/** Parse uint32 LE header length, JSON padded to 4 bytes, float32 positions,
+ * uint32 triangle indices, then float16 CFD and predicted pressure in Pa. */
+function parse(buffer) {
+  const length = new DataView(buffer).getUint32(0, true);
+  const header = JSON.parse(new TextDecoder().decode(new Uint8Array(buffer, 4, length)));
+  let offset = 4 + length;
+  const take = (Type, count) => {
+    const array = new Type(buffer, offset, count);
+    offset += array.byteLength;
+    return array;
+  };
+  const positions = take(Float32Array, 3 * header.vertices);
+  const indices = take(Uint32Array, 3 * header.triangles);
+  const cfd = Float32Array.from(take(Uint16Array, header.vertices), THREE.DataUtils.fromHalfFloat);
+  const predicted = Float32Array.from(take(Uint16Array, header.vertices), THREE.DataUtils.fromHalfFloat);
+  return { header, positions, indices, cfd, predicted };
+}
+
+function quantile(sorted, q) {
+  return sorted[Math.floor(q * (sorted.length - 1))];
+}
+
+function colorbar(id, stops, low, high) {
+  const bar = document.getElementById(id);
+  bar.querySelector(".low").textContent = `${Math.round(low)} Pa`;
+  bar.querySelector(".high").textContent = `${Math.round(high)} Pa`;
+  bar.querySelector(".colorbar-ramp").style.background =
+    `linear-gradient(to right, ${stops.map((c) => `rgb(${c.map((v) => Math.round(255 * v)).join(",")})`).join(",")})`;
+}
+
+function scene(geometry, values, stops, low, high) {
+  const colors = new Float32Array(3 * values.length);
+  const color = new THREE.Color();
+  values.forEach((value, i) => {
+    // The colormap is in sRGB, as in the CSS colorbar; vertex colors are linear.
+    color.setRGB(...colormap(stops, (value - low) / (high - low)), THREE.SRGBColorSpace);
+    color.toArray(colors, 3 * i);
+  });
+  const car = new THREE.BufferGeometry();
+  car.setIndex(geometry.index);
+  car.setAttribute("position", geometry.getAttribute("position"));
+  car.setAttribute("normal", geometry.getAttribute("normal"));
+  car.boundingSphere = geometry.boundingSphere.clone();
+  car.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+  const result = new THREE.Scene();
+  result.add(new THREE.Mesh(car, new THREE.MeshLambertMaterial({ vertexColors: true })));
+  result.add(new THREE.HemisphereLight(0xffffff, 0x808080, 2.2));
+  const light = new THREE.DirectionalLight(0xffffff, 1.2);
+  light.position.set(-1, -2, 3);
+  result.add(light);
+  return result;
+}
+
+async function main() {
+  const container = document.getElementById("viewer");
+  const status = document.getElementById("viewer-status");
+  const response = await fetch("drivaernet_car.bin");
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const { header, positions, indices, cfd, predicted } = parse(await response.arrayBuffer());
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setIndex(new THREE.BufferAttribute(indices, 1));
+  geometry.computeVertexNormals();
+  geometry.computeBoundingSphere();
+  const { center, radius } = geometry.boundingSphere;
+
+  const sortedCfd = Float32Array.from(cfd).sort();
+  const low = quantile(sortedCfd, 0.01);
+  const high = quantile(sortedCfd, 0.99);
+  const error = predicted.map((value, i) => value - cfd[i]);
+  const bound = quantile(error.map(Math.abs).sort(), 0.99);
+  const scenes = [
+    scene(geometry, cfd, COOLWARM, low, high),
+    scene(geometry, predicted, COOLWARM, low, high),
+    scene(geometry, error, PUOR, -bound, bound),
+  ];
+  colorbar("colorbar-pressure", COOLWARM, low, high);
+  colorbar("colorbar-error", PUOR, -bound, bound);
+  document.getElementById("viewer-caption").textContent =
+    `Surface pressure on DrivAerNet test car ${header.design_id}, whose relative L2 error, ${(100 * header.rel_l2).toFixed(1)}%, ` +
+    `is the median over the ${header.cars} test cars; mesh decimated from ${header.original_vertices.toLocaleString("en")} ` +
+    `to ${header.vertices.toLocaleString("en")} vertices for display. Drag to rotate, scroll or pinch to zoom; the three views move together.`;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0xffffff);
+  renderer.setScissorTest(true);
+  container.prepend(renderer.domElement);
+  status.remove();
+
+  const camera = new THREE.PerspectiveCamera(30, 1, radius / 100, radius * 20);
+  camera.up.set(0, 0, 1);
+  camera.position.copy(center).add(new THREE.Vector3(-1.6, -2.2, 1.0).multiplyScalar(radius * 1.3));
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.copy(center);
+  controls.enablePan = false;
+  controls.update();
+
+  const labels = container.querySelectorAll(".viewer-label");
+  function render() {
+    const { clientWidth: width, clientHeight: height } = container;
+    const stacked = getComputedStyle(container).getPropertyValue("--viewer-stacked").trim() === "1";
+    const [w, h] = stacked ? [width, height / scenes.length] : [width / scenes.length, height];
+    renderer.setSize(width, height, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    scenes.forEach((s, i) => {
+      const [x, y] = stacked ? [0, (scenes.length - 1 - i) * h] : [i * w, 0];
+      renderer.setViewport(x, y, w, h);
+      renderer.setScissor(x, y, w, h);
+      renderer.render(s, camera);
+      labels[i].style.left = `${x + 12}px`;
+      labels[i].style.top = `${(stacked ? i * h : 0) + 8}px`;
+    });
+  }
+  controls.addEventListener("change", render);
+  new ResizeObserver(render).observe(container);
+}
+
+try {
+  [THREE, { OrbitControls }] = await Promise.all([import("three"), import("three/addons/controls/OrbitControls.js")]);
+  await main();
+} catch (error) {
+  const status = document.getElementById("viewer-status");
+  if (status) status.textContent = `The 3D viewer could not load (${error.message}).`;
+  console.error(error);
+}
+</script>
+<script>
+for (const button of document.querySelectorAll(".copy")) {
+  let reset;
+  button.addEventListener("click", async () => {
+    const text = button.parentElement.querySelector("code").textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      button.textContent = "Copied";
+    } catch {
+      button.textContent = "Copy failed";
+    }
+    clearTimeout(reset);
+    reset = setTimeout(() => { button.textContent = "Copy"; }, 1500);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+# Replicates the paper's Photo result; procedure in the README.
+# Expected: test accuracy 95.65 ± 0.46% (mean ± std over 6 seeds). 4.01M parameters.
+dataset: photo
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+embedding:
+  embed_dim: 512
+  deg: 256
+model:
+  hidden_dim: 256
+  num_layers: 2
+  num_heads: 4
+  mlp_ratio: 2
+  dropout: 0.7
+  branch_dim: 128
+  spectral_threshold: 2.0
+train:
+  lr: 0.001
+  weight_decay: 0.0
+  epochs: 500
+  warmup_epochs: 5
+  batch_size: 1
+  final_training: true

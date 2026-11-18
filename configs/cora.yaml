@@ -1,0 +1,27 @@
+# Replicates the paper's Cora result; procedure in the README.
+# Expected: test accuracy 84.25 ± 0.65% (mean ± std over 6 seeds). 6.55M parameters.
+dataset: cora
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+embedding:
+  embed_dim: 512
+  deg: 128
+model:
+  hidden_dim: 256
+  num_layers: 2
+  num_heads: 4
+  mlp_ratio: 2
+  dropout: 0.8
+  spectral_threshold: 2.0
+train:
+  lr: 0.001
+  weight_decay: 0.0005
+  epochs: 100
+  warmup_epochs: 1
+  batch_size: 1
+  final_training: true

@@ -1,0 +1,28 @@
+# Replicates the paper's CiteSeer result; procedure in the README.
+# Expected: test accuracy 73.85 ± 0.63% (mean ± std over 6 seeds). 17.13M parameters.
+dataset: citeseer
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+embedding:
+  embed_dim: 512
+  deg: 128
+model:
+  hidden_dim: 512
+  num_layers: 2
+  num_heads: 4
+  mlp_ratio: 2
+  dropout: 0.8
+  branch_dim: 256
+  spectral_threshold: 2.0
+train:
+  lr: 0.0003
+  weight_decay: 0.0005
+  epochs: 100
+  warmup_epochs: 1
+  batch_size: 1
+  final_training: true

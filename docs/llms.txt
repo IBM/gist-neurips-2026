@@ -1,0 +1,15 @@
+# GIST: Gauge-Invariant Spectral Transformers
+
+> GIST (Gauge-Invariant Spectral Transformer, NeurIPS 2026) is a scalable neural operator for graphs and irregular meshes. It restricts attention to pairwise inner products of approximate spectral node embeddings (FastRP random projections), which estimate a graph kernel invariant to the choice of eigenvector basis, at end-to-end O(N) cost and without eigendecomposition. The code trains it on node classification (Cora, CiteSeer, PubMed, Amazon Photo, ogbn-arxiv, PPI) and mesh regression (AirfRANS, ShapeNet-Car, DrivAerNet).
+
+## Code
+
+Install: `pip install git+https://github.com/IBM/gist-neurips-2026` (imports as `gist`; the `gist` package on PyPI is unrelated).
+
+- [Repository](https://github.com/IBM/gist-neurips-2026): install, usage on your own graph, one config per benchmark, reproduction commands with storage and compute
+- [AGENTS.md](https://github.com/IBM/gist-neurips-2026/blob/main/AGENTS.md): layout, checks, how to run and change the code
+
+## Paper
+
+- [NeurIPS 2026](https://neurips.cc/virtual/2026/poster/152787)
+- [arXiv:2603.16849](https://arxiv.org/abs/2603.16849)
