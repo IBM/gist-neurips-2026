@@ -1,0 +1,28 @@
+# Replicates the paper's PPI result; procedure in the README.
+# Expected: test micro-F1 99.533 ± 0.014% (mean ± std over 6 seeds). 5.83M parameters.
+dataset: ppi
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+embedding:
+  embed_dim: 256
+  deg: 64
+model:
+  hidden_dim: 256
+  num_layers: 3
+  num_heads: 4
+  mlp_ratio: 2
+  dropout: 0.3
+  branch_dim: 128
+  spectral_threshold: 1.0
+train:
+  lr: 0.00025
+  weight_decay: 0.0
+  epochs: 1000
+  warmup_epochs: 10
+  batch_size: 2
+  final_training: true

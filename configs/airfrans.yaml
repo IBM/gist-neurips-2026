@@ -1,0 +1,24 @@
+# Replicates the paper's AirfRANS result; procedure in the README.
+# Expected: test mse 0.00060 ± 0.00007, rel_l2 0.0220 ± 0.0005 (mean ± std over 3 seeds); mse x 2.77 = 0.0017 with pressure standardized over all training nodes, the convention of Transolver's 0.0142. 6.18M parameters.
+dataset: airfrans
+seeds:
+- 0
+- 1
+- 2
+embedding:
+  embed_dim: 256
+  deg: 64
+model:
+  hidden_dim: 256
+  num_layers: 2
+  num_heads: 4
+  mlp_ratio: 2
+  dropout: 0.0
+  spectral_threshold: 1.0
+train:
+  lr: 0.00003
+  weight_decay: 0.0
+  epochs: 300
+  batch_size: 1
+  final_training: false
+  num_workers: 4

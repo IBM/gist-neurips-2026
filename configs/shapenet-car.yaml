@@ -1,0 +1,26 @@
+# Replicates the paper's ShapeNet-Car result; procedure in the README.
+# Expected: test rel_l2 0.0702 ± 0.0005, mse 0.0088 ± 0.0003 (mean ± std over 3 seeds). 5.79M parameters.
+dataset: shapenet-car
+seeds:
+- 0
+- 1
+- 2
+embedding:
+  embed_dim: 256
+  deg: 64
+model:
+  hidden_dim: 256
+  num_layers: 3
+  num_heads: 4
+  mlp_ratio: 2
+  dropout: 0.0
+  branch_dim: 128
+  spectral_threshold: 1.0
+train:
+  lr: 0.0001
+  weight_decay: 0.0
+  epochs: 200
+  batch_size: 1
+  final_training: false
+  selection_metric: rel_l2
+  num_workers: 4

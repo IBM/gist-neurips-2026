@@ -1,0 +1,28 @@
+# Replicates the paper's PubMed result; procedure in the README.
+# Expected: test accuracy 82.60 ± 0.37% (mean ± std over 6 seeds). 3.94M parameters.
+dataset: pubmed
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+embedding:
+  embed_dim: 512
+  deg: 256
+model:
+  hidden_dim: 256
+  num_layers: 2
+  num_heads: 4
+  mlp_ratio: 2
+  dropout: 0.8
+  branch_dim: 128
+  spectral_threshold: 1.0
+train:
+  lr: 0.0001
+  weight_decay: 0.0005
+  epochs: 1000
+  warmup_epochs: 10
+  batch_size: 1
+  final_training: true
