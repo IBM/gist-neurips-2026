@@ -13,3 +13,4 @@ Install: `pip install git+https://github.com/IBM/gist-neurips-2026` (imports as 
 
 - [NeurIPS 2026](https://neurips.cc/virtual/2026/poster/152787)
 - [arXiv:2603.16849](https://arxiv.org/abs/2603.16849)
+- [Faster by Design (arXiv:2604.18491)](https://arxiv.org/abs/2604.18491): GIST on an LMP2-class race-car CFD dataset, with Dallara
