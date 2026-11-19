@@ -6,18 +6,28 @@ GIST is a graph transformer with end-to-end linear cost in the number of nodes. 
 
 ## Install
 
-Python 3.11 or newer.
+Python 3.11 or newer. With [uv](https://docs.astral.sh/uv/), which installs the exact versions in `uv.lock` (install uv with `curl -LsSf https://astral.sh/uv/install.sh | sh` or `pip install uv`):
 
 ```bash
 git clone https://github.com/IBM/gist-neurips-2026.git
 cd gist-neurips-2026
+uv sync                       # node-classification benchmarks
+uv sync --all-extras          # or: also meshes (pyvista), ogbn-arxiv (ogb) and TensorBoard
+source .venv/bin/activate     # or prefix the python and torchrun commands below with `uv run`
+```
+
+With uv, skip the `pip install` lines in the benchmark sections below: `uv sync --all-extras` covers them.
+
+With pip, which resolves the versions afresh:
+
+```bash
 pip install -e .            # node-classification benchmarks
 pip install -e ".[mesh]"    # AirfRANS, ShapeNet-Car, DrivAerNet (pyvista)
 pip install -e ".[ogb]"     # ogbn-arxiv
 pip install -e ".[tensorboard]"  # training curves in TensorBoard
 ```
 
-With [uv](https://docs.astral.sh/uv/): `make install` creates `.venv` with all extras and the dev tools (activate it with `source .venv/bin/activate` before the commands below); `make test` and `make check` run the tests and the lint and type checks.
+`make install` runs `uv sync --all-extras`; `make test` and `make check` run the tests and the lint and type checks.
 
 ## Usage
 

@@ -193,11 +193,12 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 <section>
   <h2>Code</h2>
   <p>The <a href="https://github.com/IBM/gist-neurips-2026">repository</a> holds the model and one config per benchmark, with the commands, data and compute needed to reproduce each result.</p>
-<pre><code>git clone https://github.com/IBM/gist-neurips-2026.git
+  <p>Needs <a href="https://docs.astral.sh/uv/">uv</a>; pip works too, see the README.</p>
+<pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh  # installs uv, if missing
+git clone https://github.com/IBM/gist-neurips-2026.git
 cd gist-neurips-2026
-pip install -e .
-python scripts/generate_embeddings.py cora --embed_dim 512 --deg 128
-python -m gist.train configs/cora.yaml</code></pre>
+uv run python scripts/generate_embeddings.py cora --embed_dim 512 --deg 128
+uv run python -m gist.train configs/cora.yaml</code></pre>
 </section>
 
 <section>
