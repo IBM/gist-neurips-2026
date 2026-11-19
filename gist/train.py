@@ -26,7 +26,7 @@ from torch_geometric.loader import DataLoader
 
 from gist.config import load_config, resolve_config
 from gist.datasets import Benchmark, load_dataset
-from gist.logs import configure_logging, format_duration
+from gist.logs import configure_logging, format_duration, progress_step
 from gist.metrics import DEFAULT_SELECTION_METRIC, _is_better, compute_metrics, task_loss
 from gist.model import GIST
 
@@ -201,9 +201,8 @@ def _log_epoch(
     stats: Mapping[str, float],
     val_metrics: Mapping[str, float],
     note: str,
-    writer: SummaryWriter | None,
 ) -> None:
-    """Log one epoch as a line and, with a writer, as TensorBoard scalars."""
+    """Log one epoch as a line."""
     parts = [
         f"{phase} epoch {epoch:>{len(str(epochs))}}/{epochs}",
         f"loss {stats['loss']:.4f}",
@@ -217,9 +216,6 @@ def _log_epoch(
     if "memory_gib" in stats:
         parts.append(f"{stats['memory_gib']:.1f} GiB")
     logger.info("  ".join(parts))
-    if writer is not None:
-        _write_scalars(writer, phase, stats, epoch)
-        _write_scalars(writer, "val", val_metrics, epoch)
 
 
 def _fit(
@@ -267,6 +263,7 @@ def _fit(
         train_config["lr"] * graphs_per_step,
         parameters / 1e6,
     )
+    log_every = progress_step(epochs)
 
     for epoch in range(1, epochs + 1):
         model.train()
@@ -317,7 +314,11 @@ def _fit(
         stats["seconds"] = time.perf_counter() - start
         if device.type == "cuda":
             stats["memory_gib"] = torch.cuda.max_memory_allocated(device) / 2**30
-        _log_epoch(phase, epoch, epochs, stats, val_metrics, note, writer)
+        if epoch % log_every == 0:
+            _log_epoch(phase, epoch, epochs, stats, val_metrics, note)
+        if writer is not None:
+            _write_scalars(writer, phase, stats, epoch)
+            _write_scalars(writer, "val", val_metrics, epoch)
         if patience is not None and stale_evaluations >= patience and stale_evaluations > 0:
             logger.info("Stopping early: no val %s improvement in %d evaluations", metric, stale_evaluations)
             break

@@ -95,7 +95,7 @@ python -m gist.train configs/cora.yaml --set 'seeds=[0]' --set train.epochs=2 --
 
 The run passes when it ends with `Results written to results/smoke.json`; two epochs are not expected to reach the accuracy of the full run.
 
-Training logs one line per epoch (loss, learning rate, validation metrics, time). With `--set tensorboard_dir=runs`, it also writes the curves of each seed to `runs/<dataset>_<timestamp>/seed<seed>` for TensorBoard.
+Training logs one line (loss, learning rate, validation metrics, time) about every tenth of the epochs. With `--set tensorboard_dir=runs`, it also writes the curves of each seed to `runs/<dataset>_<timestamp>/seed<seed>` for TensorBoard.
 
 Inductive benchmarks train on several GPUs with `torchrun --nproc_per_node=4 -m gist.train configs/drivaernet.yaml`: each GPU takes its share of the graphs, so a run uses at most as many GPUs as its smallest split has graphs (2 for PPI), and `train.lr`, the rate for one graph per step, is multiplied by the number of graphs per step (GPUs × `batch_size`).
 

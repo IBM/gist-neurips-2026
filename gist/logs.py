@@ -27,10 +27,15 @@ def format_duration(seconds: float) -> str:
     return f"{seconds / 3600:.1f} h"
 
 
+def progress_step(total: int) -> int:
+    """Return the interval that reports progress at about every tenth of ``total`` items."""
+    return max(1, total // 10)
+
+
 def log_progress(items: Iterable[T], total: int, label: str) -> Iterator[T]:
     """Yield items, logging the count, time per item, and time left at about every tenth of the total."""
     start = time.perf_counter()
-    step = max(1, total // 10)
+    step = progress_step(total)
     for done, item in enumerate(items, 1):
         yield item
         if done % step == 0 or done == total:
