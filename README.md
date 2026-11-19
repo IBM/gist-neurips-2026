@@ -6,7 +6,7 @@ GIST is a graph transformer with end-to-end linear cost in the number of nodes. 
 
 ## Install
 
-Python 3.10 or newer.
+Python 3.11 or newer.
 
 ```bash
 git clone https://github.com/IBM/gist-neurips-2026.git

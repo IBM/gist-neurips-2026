@@ -5,7 +5,7 @@ description = "GIST: Gauge-Invariant Spectral Transformers for scalable graph ne
 authors = [{ name = "Mattia Rigotti" }, { name = "Nicholas Thumiger" }, { name = "Thomas Frick" }]
 readme = "README.md"
 license = "Apache-2.0"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
@@ -55,7 +55,7 @@ ignore_missing_imports = true
 testpaths = ["tests"]
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py311"
 line-length = 120
 
 [tool.ruff.lint]
