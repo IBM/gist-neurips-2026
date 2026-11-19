@@ -102,6 +102,9 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .colorbar-error { flex: 1 1 240px; }
 .colorbar-ramp { flex: 1; height: 10px; border-radius: 5px; }
 @media (max-width: 560px) { .viewer { --viewer-stacked: 1; aspect-ratio: 1 / 1.8; } }
+.industry { display: grid; grid-template-columns: 1fr 280px; gap: 24px; align-items: start; }
+.industry figure { margin: 0; max-width: 320px; }
+@media (max-width: 560px) { .industry { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -192,7 +195,23 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 
 <section>
   <h2>In industry</h2>
-  <p>With Dallara, GIST predicts the aerodynamics of an LMP2-class race car in seconds, where simulation takes hours, on a CFD dataset validated by Dallara's aerodynamicists: see the <a href="https://arxiv.org/abs/2604.18491">Faster by Design</a> paper (AI &amp; PDE workshop, ICLR 2026) and the <a href="https://research.ibm.com/blog/dallara-ai-accelerated-simulation">IBM Research blog</a>.</p>
+  <p>With Dallara, the Italian race-car maker, we trained GIST on high-fidelity CFD simulations of an LMP2-class race car, validated by Dallara's aerodynamicists. Its thin wings, splitters and diffusers are much harder to predict than the smooth passenger cars of public benchmarks.</p>
+  <figure>
+    <img src="dallara_front.jpg" alt="Surface pressure on the front of an LMP2 race car: CFD, GIST prediction and their difference" loading="lazy">
+    <figcaption>Surface pressure on the front of the LMP2 car: CFD (left), GIST prediction (centre), error (right).</figcaption>
+  </figure>
+  <div class="industry">
+    <ul>
+      <li>Surface-pressure error (MSE) of 1.88&nbsp;×&nbsp;10<sup>−2</sup>, about half that of the next best model (GAOT, 3.55&nbsp;×&nbsp;10<sup>−2</sup>).</li>
+      <li>Drag and downforce within 0.6% and 0.7% of CFD on average.</li>
+      <li>In a sweep of the rear-diffuser angle, GIST answers in about 10 seconds where CFD takes several hours, and picks the same best angle (1–2°).</li>
+    </ul>
+    <figure>
+      <img src="dallara_diffuser.png" alt="Downforce and drag coefficients against rear-diffuser angle, CFD and GIST" loading="lazy">
+      <figcaption>Downforce (top) and drag (bottom) against diffuser angle in degrees; shaded: best interval.</figcaption>
+    </figure>
+  </div>
+  <p>Details in the <a href="https://arxiv.org/abs/2604.18491">Faster by Design</a> paper (AI &amp; PDE workshop, ICLR 2026; figures from it under CC BY-SA 4.0) and the <a href="https://research.ibm.com/blog/dallara-ai-accelerated-simulation">IBM Research blog</a>.</p>
 </section>
 
 <section>
